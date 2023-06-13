@@ -10,7 +10,6 @@
     "rules": {
         "space-before-function-paren": ["error", "always"],
         "comma-spacing": ["error", { "before": false, "after": true }],
-        "brace-style": "error",
         "space-before-blocks" : "error",
         "comma-dangle": ["error", "never"],
         "array-bracket-spacing": ["error", "never", {}],
@@ -25,7 +24,8 @@
         "semi": ["error", "always"],
         "@typescript-eslint/no-var-requires" : "off",
         "@typescript-eslint/no-explicit-any" : "off",
-        "@typescript-eslint/no-empty-function" : "off"
+        "@typescript-eslint/no-empty-function" : "off",
+        "brace-style": ["error", "1tbs", { "allowSingleLine": true }]
     },
     "globals" : {
         "NODE_ENV" : "readonly",
