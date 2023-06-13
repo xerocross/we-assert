@@ -3,9 +3,9 @@
 We-Assert is an assert utility for use in internally verifying statements inside scripts at runtime. One potential goal is to catch what would otherwise be silent errors, or perhaps even
 to mathematically prove that an algorithm has functioned as expected.
 
-We-Assert depends on Vulcan, Version 0.4.0, (https://github.com/RyanMarcus/vulcan), which is old but appears to be stable. Aside from that dependency, it is a one-man project written and maintained by Adam Cross. If I say "we", really I'm just referring to myself.
+This project was stale for a long while, but as of June 2023 I have updated it to Version 4, and it is up-to-code. I plan to use it in some of my other projects, so it is likely that I will maintain it better now.
 
-This project was stale for a long while, but as of June 2023 I have updated it to Version 3, and it is up-to-code. I plan to use it in some of my other projects, so it is likely that I will maintain it better now.
+Version 4 of We-Assert has been stripped of Vulcan (https://github.com/RyanMarcus/vulcan), which was packaged with Version 3. The license of We-Assert 4 is the MIT license. What was formerly We-Assert Version 3 is now a new project called We-Assert-Proof, located at https://github.com/xerocross/we-assert-proof. That project is interesting to me, but I find the copyleft license of Vulcan far too restrictive.
 
 ## importing
 
@@ -14,20 +14,17 @@ We-Assert is published to NPM as `we-assert`. Standard importing would look like
 import WeAssert from "we-assert"
 ```
 
+
 The source code is at https://github.com/xerocross/we-assert.
 
 ## development and deployment
 
-As of Version 3, we are now using npm to build this project (not yarn, which we used in V2), so to install execute `npm install`.
+As of Version 4, we are now using npm to build this project (not yarn, which we used in V2), so to install execute `npm install`.
 
 We-Assert is written in TypeScript.  The package includes a test suite and a script for running it. Use `npm test` to run the test suite, which is written using Jest.
 
-## copyleft license
-
-Note the restrictive copyleft license. That was not my decision. I prefer to use the MIT license, but because Vulcan uses the highly restrictive GNU AFFERO GENERAL PUBLIC LICENSE, and because Vulcan is bundled with We-Assert, I was required to use a compatible license, so I used the same one.
 
 ## usage
-
 
 ```
 import WeAssert from "we-assert";

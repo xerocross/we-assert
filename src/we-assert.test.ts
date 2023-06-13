@@ -82,42 +82,6 @@ test("forXBetween works on simple false statement", function () {
     expect(resultVal).toBe(false);
 });
 
-test("vulcan module simple positive", function () {
-    const x = 8;
-    we.assert.proposition("A", [(x:number)=> x % 4 == 0, [x], `${x} % 4 == 0`]);
-    expect(resultVal).toBe(undefined);
-});
-
-test("vulcan module simple negative", function () {
-    const x = 9;
-    we.assert.proposition("A", [(x:number)=> x % 4 == 0, [x], `${x} % 4 == 0`]);
-    expect(resultVal).toBe(false);
-});
-
-test("vulcan proof positive", function () {
-    const x = 8;
-    we.assert.proposition("A", [(x:number)=> x % 4 == 0, [x], `${x} % 4 == 0`]);
-    we.assume("A -> B");
-    we.assert.thatIsProved("B", "some interpretation of B");
-    expect(resultVal).toBe(undefined);
-});
-
-test("vulcan combination of statements positive", function () {
-    const x = 8;
-    we.assert.proposition("A", [(x:number)=> x % 4 == 0, [x], "x % 4 == 0"]);
-    we.assert.proposition("B", [(x:number)=> x % 2 == 0, [x], "x % 2 == 0"]);
-    we.assert.thatIsProved("A & B", "A & B");
-    expect(resultVal).toBe(undefined);
-});
-
-test("vulcan combination of statements negative", function () {
-    const x = 18;
-    we.assert.proposition("A", [(x:number) => x % 4 == 0, [x], "x % 4 == 0"]);
-    we.assert.proposition("B", [(x:number) => x % 2 == 0, [x], "x % 2 == 0"]);
-    we.assert.thatIsProved("A & B", "A & B");
-    expect(messages[0]).toBe("x % 4 == 0");
-});
-
 test("data type def positive", function () {
     const x = 18;
     FU.isType = (x : number) => {

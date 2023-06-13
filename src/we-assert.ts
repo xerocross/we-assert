@@ -1,4 +1,3 @@
-import * as vulcan from "xerocross.vulcan";
 type GenericObject = { [key: string]: any };
 type StringObject = { [key: string]: string };
 type handlerFunction = (message:string) => void;
@@ -23,9 +22,6 @@ const levelStringToInt = function (levelString:string) :number {
 };
 
 export default {
-    checkVulcan () {
-        return vulcan;
-    },
     build : function () {
         
         let currentLevel = 2;
@@ -54,10 +50,6 @@ export default {
             },
             getLevel : function () :string {
                 return levels[currentLevel];
-            },
-            checkIsProved : function (symbol:string) :boolean {
-                const proof = vulcan.prove(factBase, symbol);
-                return vulcan.isProofComplete(proof);
             },
             setHandler : function (newHandler:handlerFunction) {
                 handler = newHandler;
@@ -99,13 +91,6 @@ export default {
                         factBase.push(symbol);
                     }
                     return this.that(val, propMessage);
-                },
-                thatIsProved : function (symbol:string, message:string) {
-                    const res = we.checkIsProved(symbol);
-                    if (!res) {
-                        handler(message);
-                    } 
-                    return res;
                 },
                 forXBetween : function (min:number, max:number) {
                     const that = this.that;
