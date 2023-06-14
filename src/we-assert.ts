@@ -1,10 +1,17 @@
-type GenericObject = { [key: string]: any };
-type StringObject = { [key: string]: string };
-type handlerFunction = (message:string) => void;
-type evalFunction = (...args:any) => boolean;
-let handler:handlerFunction = function () :void {};
+type JavaScript = { [key: string]: any };
+type KeyString = { [key: string]: string };
+type HandlerFunction = (message:string, payload?: JavaScript) => void;
+type EvalFunction = (...args:any) => boolean;
+type ValidationData = {
+    level:string,
+    payload:JavaScript | undefined,
+    message:string,
+    statement:boolean
+}
+type verifyFunction = (x:any) => boolean;
+type prop = [EvalFunction, any[], string];
 
-const levels: StringObject = {
+const levels: KeyString = {
     0 : "DEBUG",
     1 : "WARN",
     2 : "ERROR"
@@ -17,19 +24,39 @@ const levelStringToInt = function (levelString:string) :number {
         return 1;
     case "ERROR":
         return 2;
+    default:
+        throw new Error("we-assert: invalid error level");
     }
-    throw new Error();
 };
 
 export default {
     build : function () {
-        
         let currentLevel = 2;
-        type prop = [evalFunction, any[], string];
         const propositions :{ [key: string]: prop } = {};
-        const types:GenericObject = {};
-        type verifyFunction = (x:any) => boolean
+        const types:JavaScript = {};
         const factBase: string[] = [];
+        let errorHandler:HandlerFunction;
+        let warnHandler:HandlerFunction;
+        let debugHandler:HandlerFunction;
+        let handler:HandlerFunction = () => {};
+        let errorHandlerSet = false;
+        let debugHandlerSet = false;
+        let warnHandlerSet = false;
+
+        const $that = (args:ValidationData) => {
+            if (!args.statement) {
+                if (args.level == "ERROR") {
+                    errorHandlerSet ? errorHandler(args.message, args.payload) : handler(args.message, args.payload);
+                } else if (args.level === "WARN") {
+                    warnHandlerSet ? warnHandler(args.message, args.payload) : handler(args.message, args.payload);
+                } else if (args.level == "DEBUG") {
+                    debugHandlerSet ? debugHandler(args.message, args.payload) : handler(args.message, args.payload);
+                } else {
+                    handler(args.message, args.payload);
+                }
+            }
+            return args.statement;
+        };
 
         const we = {
             define : {
@@ -51,8 +78,20 @@ export default {
             getLevel : function () :string {
                 return levels[currentLevel];
             },
-            setHandler : function (newHandler:handlerFunction) {
+            setHandler : function (newHandler:HandlerFunction) {
                 handler = newHandler;
+            },
+            setErrorHandler : (newHandler:HandlerFunction) => {
+                errorHandlerSet = true;
+                errorHandler = newHandler;
+            },
+            setWarnHandler : (newHandler:HandlerFunction) => {
+                warnHandlerSet = true;
+                warnHandler = newHandler;
+            },
+            setDebugHandler : (newHandler:HandlerFunction) => {
+                debugHandlerSet = true;
+                debugHandler = newHandler;
             },
             getProposition : function (symbol:string) {
                 return propositions[symbol];
@@ -67,37 +106,39 @@ export default {
                             if (types[dataTypeString]) {
                                 return types[dataTypeString](data);
                             } else {
-                                return false;
+                                throw new Error("we-assert: typeString is not defined");
                             }
                         }
                     };
                 }
             },
             assert : {
-                that : function (statement:boolean, message:string) {
-                    if (!statement) {
-                        handler(message);
-                    }
-                    return ((statement) == true);
+                that : function (message:string, statement:boolean, payload?: JavaScript) {
+                    return $that({
+                        statement,
+                        message,
+                        payload,
+                        level : "ERROR"
+                    });
                 },
                 proposition : function (symbol:string, prop:prop) {
                     we.defineProposition(symbol, prop);
                     const propFunction = prop[0];
                     const propArgs = prop[1];
                     const propMessage = prop[2];
-                    const val = propFunction(...propArgs);
+                    const truthValue = propFunction(...propArgs);
     
-                    if (val) {
+                    if (truthValue) {
                         factBase.push(symbol);
                     }
-                    return this.that(val, propMessage);
+                    return this.that(propMessage, truthValue);
                 },
                 forXBetween : function (min:number, max:number) {
                     const that = this.that;
                     const obj = {
-                        that : function (evalFunction:evalFunction, message:string) :void {
+                        that : function (message:string, evalFunction:EvalFunction,) :void {
                             for (let x = min; x < max; x++) {
-                                that(evalFunction(x), message);
+                                that(message, evalFunction(x));
                             }
                         }
                     };
@@ -107,22 +148,26 @@ export default {
                     return {
                         is : (dataType:string, message:string) => {
                             if (types[dataType]) {
-                                this.that(types[dataType](data), message);
+                                this.that(message, types[dataType](data));
                             } else {
-                                throw new Error("undefined type");
+                                throw new Error("we-assert: undefined type");
                             }
                         }
                     };
                 },
-                atLevel : function (someLevelString:string) {
-                    const upperThat = this.that;
+                atLevel : function (levelString:string) {
                     const obj = {
-                        that : function (statement:boolean, message:string) {
-                            
-                            const level = levelStringToInt(someLevelString);
+                        that : function (message:string, statement:boolean, payload? :JavaScript) {
+                            const level = levelStringToInt(levelString);
                             if (level >= currentLevel) {
-                                upperThat(statement, message);
+                                return $that({
+                                    statement,
+                                    message,
+                                    payload,
+                                    level : levels[level]
+                                });
                             }
+                            return (statement);
                         }
                     };
                     return obj;
