@@ -3,9 +3,20 @@
 We-Assert is an assert utility for use in internally verifying statements inside scripts at runtime. One potential goal is to catch what would otherwise be silent errors, or perhaps even
 to mathematically prove that an algorithm has functioned as expected.
 
-This project was stale for a long while, but as of June 2023 I have updated it to Version 4, and it is up-to-code. I plan to use it in some of my other projects, so it is likely that I will maintain it better now.
+This project was stale for a long while, but as of June 2023 I have updated it to Version 5, and it is up-to-code. I plan to use it in some of my other projects, so it is likely that I will maintain it better now.
 
-Version 4 of We-Assert has been stripped of Vulcan (https://github.com/RyanMarcus/vulcan), which was packaged with Version 3. The license of We-Assert 4 is the MIT license. What was formerly We-Assert Version 3 is now a new project called We-Assert-Proof, located at https://github.com/xerocross/we-assert-proof. That project is interesting to me, but I find the copyleft license of Vulcan far too restrictive.
+As of version 4, We-Assert has been stripped of Vulcan (https://github.com/RyanMarcus/vulcan), which was packaged with Version 3. The license of We-Assert 4 is the MIT license. What was formerly We-Assert Version 3 is now a new project called We-Assert-Proof, located at https://github.com/xerocross/we-assert-proof. That project is interesting to me, but I find the copyleft license of Vulcan far too restrictive.
+
+## New Stuff
+
+As of V5, I have reordered the arguments of the basic `we.assert` functions
+so that they should be `(message, validatorFunction, payload)`. I realize this is
+a breaking change, but I'm doing it because it makes more sense, and it makes
+the intention of the statement more readable because the plain language 
+message (English, or whatever human language) is up front.
+
+As of V5, the `that` function can also include an optional payload object 
+for passing data of any kind from assertions into your handler function.
 
 ## importing
 
@@ -32,7 +43,7 @@ var we = WeAssert.build();
 ```
 Here ``we`` is not a singleton.  You can build as many as you want, and each has its own scope and each can be configured independently.
 
-The most basic usage is the `that(statement, message)` function.  For example
+The most basic usage is the `that(statement, message [, payload])` function.  For example
 ```
 we.assert.that(x < y, "x < y");
 ```
@@ -64,6 +75,21 @@ By contrast, if you call
 we.assert.that(false, "test")
 ```
 then levels play no role in the assertion.  It will be treated as an error and it will go to the handler.
+
+### handlers and payloads
+
+You can define specific handlers for each level using the methods below.
+```
+we.setHandler((message, payload) => {});
+we.setErrorHandler((message, payload) => {}); 
+we.setWarnHandler((message, payload) => {});
+we.setDebugHandler((message, payload) => {});
+```
+
+For any assertion, you can optionally send a payload along with the message. For example:
+`we.assert.that("x < y", x < y, myObj)`. Here `myObj` is any JavaScript object. You can handle the data in your handler method.
+
+
 
 ### data validators
 
@@ -108,14 +134,6 @@ expect(we.check.typeOf([2, 4, 7.5, 10]).is("natural[]")).toBe(false);
 
 ## to do
 
-### handlers for different levels
-
-We should probably have different, independent handlers for the different error levels, for DEBUG, WARN, AND ERROR. I might do that later.
-
-### mathematical proof
-
-
-I'm playing with some ideas related to logical proof. I would really like to wire automated proofs into this thing, but I have not cracked it yet.
 
 ### documentation
 
