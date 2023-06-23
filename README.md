@@ -18,7 +18,7 @@ message (English, or whatever human language) is up front.
 As of V5, the `that` function can also include an optional payload object 
 for passing data of any kind from assertions into your handler function.
 
-## importing
+## Importing
 
 We-Assert is published to NPM as `we-assert`. Standard importing would look like this.
 ```
@@ -28,14 +28,14 @@ import WeAssert from "we-assert"
 
 The source code is at https://github.com/xerocross/we-assert.
 
-## development and deployment
+## Development and Deployment
 
 As of Version 4, we are now using npm to build this project (not yarn, which we used in V2), so to install execute `npm install`.
 
 We-Assert is written in TypeScript.  The package includes a test suite and a script for running it. Use `npm test` to run the test suite, which is written using Jest.
 
 
-## usage
+## Usage
 
 ```
 import WeAssert from "we-assert";
@@ -45,7 +45,7 @@ Here ``we`` is not a singleton.  You can build as many as you want, and each has
 
 The most basic usage is the `that(statement, message [, payload])` function.  For example
 ```
-we.assert.that(x < y, "x < y");
+we.assert.that("x < y", x < y);
 ```
 We recommend writing messages that are positive assertions representing the calculation&mdash;not an error message to be thrown upon failure.
 
@@ -62,17 +62,17 @@ We can set the level using any of the following:
 
 A specific assertion can be assigned a level using the `atLevel` function as in this example.
 ```
-we.assert.atLevel("WARN").that(statement, message)
+we.assert.atLevel("WARN").that(message, statement)
 ```
 When using this construction, the *statement* will only be evaluated if the level given ("WARN") is greater than or equal to the threshhold level defined using `weAssert.setLevel`.  The order is `DEBUG` < `WARN` < `ERROR`.  Thus, for example, if we set `weAssert.setLevel("ERROR")` and then execute
 ```
-we.assert.atLevel("WARN").that(false, "test")
+we.assert.atLevel("WARN").that("test", statement)
 ```
-the handler will not be called and nothing will happen because `WARN` is not greater than or equal to the current level `ERROR`.
+then `statement` will not be evaluated and the handler will not be called and nothing will happen because `WARN` is not greater than or equal to the current level `ERROR`.
 
 By contrast, if you call
 ```
-we.assert.that(false, "test")
+we.assert.that("test", false)
 ```
 then levels play no role in the assertion.  It will be treated as an error and it will go to the handler.
 
@@ -80,10 +80,10 @@ then levels play no role in the assertion.  It will be treated as an error and i
 
 You can define specific handlers for each level using the methods below.
 ```
-we.setHandler((message, payload) => {});
-we.setErrorHandler((message, payload) => {}); 
-we.setWarnHandler((message, payload) => {});
-we.setDebugHandler((message, payload) => {});
+we.setHandler((message, payload) => {...});
+we.setErrorHandler((message, payload) => {...}); 
+we.setWarnHandler((message, payload) => {...});
+we.setDebugHandler((message, payload) => {...});
 ```
 
 For any assertion, you can optionally send a payload along with the message. For example:
@@ -132,9 +132,9 @@ we.define.type("natural[]", function (x) {
 expect(we.check.typeOf([2, 4, 7.5, 10]).is("natural[]")).toBe(false);
 ```
 
-## to do
+## To Do
 
 
-### documentation
+### Documentation
 
 There is more functionality in We-Assert that I have not documented here yet. I need to add more documentation to this readme document.
