@@ -42,9 +42,13 @@ export default {
         let errorHandlerSet = false;
         let debugHandlerSet = false;
         let warnHandlerSet = false;
+        let isLogToConsole = false;
 
         const $that = (args:ValidationData) => {
             if (!args.statement) {
+                if (isLogToConsole) {
+                    console.debug(`failed: "${args.message}"`);
+                }
                 if (args.level == "ERROR") {
                     errorHandlerSet ? errorHandler(args.message, args.payload) : handler(args.message, args.payload);
                 } else if (args.level === "WARN") {
@@ -53,6 +57,10 @@ export default {
                     debugHandlerSet ? debugHandler(args.message, args.payload) : handler(args.message, args.payload);
                 } else {
                     handler(args.message, args.payload);
+                }
+            } else {
+                if (isLogToConsole) {
+                    console.debug(`validated: "${args.message}"`);
                 }
             }
             return args.statement;
@@ -63,6 +71,9 @@ export default {
                 type : function (typeName:string, vEval :verifyFunction ) :void {
                     types[typeName] = vEval;
                 }
+            },
+            logToConsole (val:boolean) {
+                isLogToConsole = val;
             },
             assume : function (logicSentence:string) :void {
                 factBase.push(logicSentence);
