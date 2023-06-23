@@ -168,11 +168,12 @@ export default {
                 },
                 atLevel : function (levelString:string) {
                     const obj = {
-                        that : function (message:string, statement:boolean, payload? :JavaScript) {
+                        that : function (message:string, statement:boolean | EvalFunction, payload? :JavaScript) {
                             const level = levelStringToInt(levelString);
                             if (level >= currentLevel) {
+                                const assertionVal : boolean = typeof statement === "function" ? statement() : statement;
                                 return $that({
-                                    statement,
+                                    statement : assertionVal,
                                     message,
                                     payload,
                                     level : levels[level]

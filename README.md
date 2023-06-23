@@ -18,6 +18,10 @@ message (English, or whatever human language) is up front.
 As of V5, the `that` function can also include an optional payload object 
 for passing data of any kind from assertions into your handler function.
 
+When using the `we.assert.atLevel([level]).that` function, you can now pass
+in a function that evaluates boolean to benefit from lazy evaluation, as explained
+below.
+
 ## Importing
 
 We-Assert is published to NPM as `we-assert`. Standard importing would look like this.
@@ -60,17 +64,24 @@ Note how in the handler we have translated the positive assertion into an error 
 We can set the level using any of the following:
 `we.setLevel("DEBUG")`, `we.setLevel("WARN")`, or  `we.setLevel("ERROR")`.  The default is "ERROR".  
 
+### At Level and Lazy Evaluation
+
 A specific assertion can be assigned a level using the `atLevel` function as in this example.
 ```
 we.assert.atLevel("WARN").that(message, statement)
 ```
-When using this construction, the *statement* will only be evaluated if the level given ("WARN") is greater than or equal to the threshhold level defined using `weAssert.setLevel`.  The order is `DEBUG` < `WARN` < `ERROR`.  Thus, for example, if we set `weAssert.setLevel("ERROR")` and then execute
+
+When using atLevel, instead of directly passing a `statement` to be evaluated immediately,
+you can pass in a function of the form `() => boolean`.
+
+When using this construction, the *boolean function* will only be evaluated if the level given ("WARN") is greater than or equal to the threshhold level defined using `weAssert.setLevel`.  The order is `DEBUG` < `WARN` < `ERROR`.  Thus, for example, if we set `weAssert.setLevel("ERROR")` and then execute
 ```
-we.assert.atLevel("WARN").that("test", statement)
+we.assert.atLevel("WARN").that("test", () => statement)
 ```
 then `statement` will not be evaluated and the handler will not be called and nothing will happen because `WARN` is not greater than or equal to the current level `ERROR`.
 
-By contrast, if you call
+
+However, you cannot pass a boolean-evaluating function into `we.assert.that` because logically it makes no sense. If you call
 ```
 we.assert.that("test", false)
 ```

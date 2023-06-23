@@ -71,26 +71,7 @@ describe("for basic handler...", () => {
         we.assert.atLevel("ERROR").that("false", false);
         expect(resultVal).toBe(true);
     });
-    test("ignores false DEBUG statement at level ERROR", () => {
-        const we = WeAssertPackage.build();
-        let resultVal = undefined;
-        we.setHandler(() => {
-            resultVal = true;
-        });
-        we.setLevel("ERROR");
-        we.assert.atLevel("DEBUG").that("false", false);
-        expect(resultVal).toBe(undefined);
-    });
-    test("ignores false WARN statement at level ERROR", () => {
-        const we = WeAssertPackage.build();
-        let functionRan = false;
-        we.setHandler(() => {
-            functionRan = true;
-        });
-        we.setLevel("ERROR");
-        we.assert.atLevel("WARN").that("false", false);
-        expect(functionRan).toBe(false);
-    });
+    
     describe("at ERROR level", () => {
         test("validation passes on correct assertion", () => {
             let test;
@@ -379,6 +360,28 @@ describe("at level DEBUG", () => {
         we.assert.atLevel("ERROR").that("false", false);
         expect(functionRan).toBe(true);
     });
+    test("does evaluate DEBUG () => boolean", () => {
+        const we = WeAssertPackage.build();
+        let statementFunctionRan = false;
+        we.setHandler(() => {});
+        we.setLevel("DEBUG");
+        const statementFunction = () => {
+            statementFunctionRan = true;
+            return true;
+        };
+        we.assert.atLevel("DEBUG").that("false", statementFunction);
+        expect(statementFunctionRan).toBe(true);
+    });
+    test("a DEBUG level () => false is passed to handler", () => {
+        const we = WeAssertPackage.build();
+        we.setLevel("DEBUG");
+        let functionRan = false;
+        we.setHandler(() => {
+            functionRan = true;
+        });
+        we.assert.atLevel("DEBUG").that("false", () => false);
+        expect(functionRan).toBe(true);
+    });
 });
 describe("at level WARN", () => {
 
@@ -412,6 +415,50 @@ describe("at level WARN", () => {
         we.assert.atLevel("ERROR").that("false", false);
         expect(functionRan).toBe(true);
     });
+    test("does not evaluate DEBUG () => boolean", () => {
+        const we = WeAssertPackage.build();
+        let statementFunctionRan = false;
+        we.setHandler(() => {});
+        we.setLevel("WARN");
+        const statementFunction = () => {
+            statementFunctionRan = true;
+            return true;
+        };
+        we.assert.atLevel("DEBUG").that("false", statementFunction);
+        expect(statementFunctionRan).toBe(false);
+    });
+    test("does evaluate WARN () => boolean", () => {
+        const we = WeAssertPackage.build();
+        let statementFunctionRan = false;
+        we.setHandler(() => {});
+        we.setLevel("WARN");
+        const statementFunction = () => {
+            statementFunctionRan = true;
+            return true;
+        };
+        we.assert.atLevel("WARN").that("false", statementFunction);
+        expect(statementFunctionRan).toBe(true);
+    });
+    test("a WARN level () => false is passed to handler", () => {
+        const we = WeAssertPackage.build();
+        we.setLevel("WARN");
+        let functionRan = false;
+        we.setHandler(() => {
+            functionRan = true;
+        });
+        we.assert.atLevel("WARN").that("false", () => false);
+        expect(functionRan).toBe(true);
+    });
+    test("an ERROR level () => false is passed to handler", () => {
+        const we = WeAssertPackage.build();
+        we.setLevel("WARN");
+        let functionRan = false;
+        we.setHandler(() => {
+            functionRan = true;
+        });
+        we.assert.atLevel("ERROR").that("false", () => false);
+        expect(functionRan).toBe(true);
+    });
 });
 describe("at level ERROR", () => {
     test("ignores false DEBUG-level statement", () => {
@@ -442,6 +489,72 @@ describe("at level ERROR", () => {
             functionRan = true;
         });
         we.assert.atLevel("ERROR").that("false", false);
+        expect(functionRan).toBe(true);
+    });
+    test("ignores false DEBUG statement", () => {
+        const we = WeAssertPackage.build();
+        let resultVal : boolean | undefined = undefined;
+        we.setHandler(() => {
+            resultVal = true;
+        });
+        we.setLevel("ERROR");
+        we.assert.atLevel("DEBUG").that("false", false);
+        expect(resultVal).toBe(undefined);
+    });
+    test("ignores false WARN statement", () => {
+        const we = WeAssertPackage.build();
+        let functionRan = false;
+        we.setHandler(() => {
+            functionRan = true;
+        });
+        we.setLevel("ERROR");
+        we.assert.atLevel("WARN").that("false", false);
+        expect(functionRan).toBe(false);
+    });
+    test("does not evaluate WARN () => boolean", () => {
+        const we = WeAssertPackage.build();
+        let statementFunctionRan = false;
+        we.setHandler(() => {});
+        we.setLevel("ERROR");
+        const statementFunction = () => {
+            statementFunctionRan = true;
+            return true;
+        };
+        we.assert.atLevel("WARN").that("false", statementFunction);
+        expect(statementFunctionRan).toBe(false);
+    });
+    test("does not evaluate DEBUG () => boolean", () => {
+        const we = WeAssertPackage.build();
+        let statementFunctionRan = false;
+        we.setHandler(() => {});
+        we.setLevel("ERROR");
+        const statementFunction = () => {
+            statementFunctionRan = true;
+            return true;
+        };
+        we.assert.atLevel("DEBUG").that("false", statementFunction);
+        expect(statementFunctionRan).toBe(false);
+    });
+    test("does evaluate ERROR () => boolean", () => {
+        const we = WeAssertPackage.build();
+        let statementFunctionRan = false;
+        we.setHandler(() => {});
+        we.setLevel("ERROR");
+        const statementFunction = () => {
+            statementFunctionRan = true;
+            return true;
+        };
+        we.assert.atLevel("ERROR").that("false", statementFunction);
+        expect(statementFunctionRan).toBe(true);
+    });
+    test("an ERROR level () => false is passed to handler", () => {
+        const we = WeAssertPackage.build();
+        we.setLevel("ERROR");
+        let functionRan = false;
+        we.setHandler(() => {
+            functionRan = true;
+        });
+        we.assert.atLevel("ERROR").that("false", () => false);
         expect(functionRan).toBe(true);
     });
 });
