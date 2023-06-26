@@ -16,11 +16,13 @@ the intention of the statement more readable because the plain language
 message (English, or whatever human language) is up front.
 
 As of V5, the `that` function can also include an optional payload object 
-for passing data of any kind from assertions into your handler function.
+for passing data of any kind from assertions into your handler function. The default handler function should be a function of the form `(message, assertionLevel, payload) => {...}`.
 
 When using the `we.assert.atLevel([level]).that` function, you can now pass
 in a function that evaluates boolean to benefit from lazy evaluation, as explained
 below.
+
+The function `we.assert.that` has been deprecated in favor of `we.assert.atLevel[assertionLevel].that(...);`. For now it is still supported, but in future versions it may be removed.
 
 ## Importing
 
@@ -36,10 +38,13 @@ The source code is at https://github.com/xerocross/we-assert.
 
 As of Version 4, we are now using npm to build this project (not yarn, which we used in V2), so to install execute `npm install`.
 
-We-Assert is written in TypeScript.  The package includes a test suite and a script for running it. Use `npm test` to run the test suite, which is written using Jest.
+We-Assert is written in TypeScript.  The package includes a test suite and a script for running it. Use `npm test` to run the test suite, which is written and run using Jest.
 
 
 ## Usage
+
+Below we summarize some of the basic usage. The test suite should be considered the official documentation. Run `npm test` for an exhaustive specification of usage. Any usage not indicated
+in the tests may have unexpected results.
 
 ```
 import WeAssert from "we-assert";
@@ -47,15 +52,15 @@ var we = WeAssert.build();
 ```
 Here ``we`` is not a singleton.  You can build as many as you want, and each has its own scope and each can be configured independently.
 
-The most basic usage is the `that(statement, message [, payload])` function.  For example
+The most basic usage is this: `we.assert.atLevel([assertionLevel]).that(message, statement [, payload])`.  For example
 ```
-we.assert.that("x < y", x < y);
+we.assert.atLevel("ERROR").that("x < y", x < y);
 ```
-We recommend writing messages that are positive assertions representing the calculation&mdash;not an error message to be thrown upon failure.
+We recommend writing messages that are positive assertions&mdash;not an error message to be thrown upon failure.
 
-If the statement evaluates false, the weAssert handler will be called.  The handler should be a function of the form `handler : (message) => {...}`.  To define such a function, we use `we.setHandler` as in this example.
+If the statement evaluates false, the handler will be called.  The handler should be a function of the form `handler : (message, assertionLevel, [,payload]) => {...}`.  To define such a function, we use `we.setHandler` as in this example.
 ```
-we.setHandler((message) => {
+we.setHandler((message [,payload]) => {
     throw new Error(`The following assertion failed: ${message}`);
 });
 ```
@@ -68,38 +73,39 @@ We can set the level using any of the following:
 
 A specific assertion can be assigned a level using the `atLevel` function as in this example.
 ```
-we.assert.atLevel("WARN").that(message, statement)
+we.assert.atLevel("WARN").that(message, statement);
 ```
 
-When using atLevel, instead of directly passing a `statement` to be evaluated immediately,
-you can pass in a function of the form `() => boolean`.
+When using atLevel, instead of directly passing a boolean `statement` to be evaluated immediately,
+you can pass in a function of the form `() => boolean`, which allows for lazy evaluation.
 
-When using this construction, the *boolean function* will only be evaluated if the level given ("WARN") is greater than or equal to the threshhold level defined using `weAssert.setLevel`.  The order is `DEBUG` < `WARN` < `ERROR`.  Thus, for example, if we set `weAssert.setLevel("ERROR")` and then execute
+When using this construction, the *boolean function* will only be evaluated if the level given in the assertion ("WARN") is greater than or equal to the threshhold level defined using `setLevel`.  The order is `DEBUG` < `WARN` < `ERROR`.  Thus, for example, if we set `we.setLevel("ERROR")` and then execute
 ```
-we.assert.atLevel("WARN").that("test", () => statement)
+we.assert.atLevel("WARN").that("test", () => statement);
 ```
 then `statement` will not be evaluated and the handler will not be called and nothing will happen because `WARN` is not greater than or equal to the current level `ERROR`.
 
 
-However, you cannot pass a boolean-evaluating function into `we.assert.that` because logically it makes no sense. If you call
+You cannot pass a boolean-evaluating function into `we.assert.that` because logically it makes no sense. If you call
 ```
 we.assert.that("test", false)
 ```
 then levels play no role in the assertion.  It will be treated as an error and it will go to the handler.
 
+Note again that `we.assert.that` has been deprecated.
+
 ### handlers and payloads
 
 You can define specific handlers for each level using the methods below.
 ```
-we.setHandler((message, payload) => {...});
+we.setHandler((message, assertionLevel, payload) => {...});
 we.setErrorHandler((message, payload) => {...}); 
 we.setWarnHandler((message, payload) => {...});
 we.setDebugHandler((message, payload) => {...});
 ```
 
 For any assertion, you can optionally send a payload along with the message. For example:
-`we.assert.that("x < y", x < y, myObj)`. Here `myObj` is any JavaScript object. You can handle the data in your handler method.
-
+`we.assert.that("x < y", x < y, myObj)`. Here `myObj` is any JavaScript object. You can handle the data in your handler method any way you want.
 
 
 ### data validators
@@ -112,12 +118,12 @@ The usage pattern is ``we.assert.typeOf(data).is(_tyepstring_, _message_)`` to v
     we.define.type("natural", (x) => isNaturalNumber(x));
     we.assert.typeOf(x).is("natural", "x is a natural");
 ```
-The ```we``` instance does not come with any predefined types.  If you want to use the standard types you can define them in your ``we`` instance by, for example, executing this:
+The ```we``` instance does not come with any predefined types.  If you want to use the standard JavaScript types you can define them in your ``we`` instance by, for example, executing this:
 
 ```we.define.type("number", (x) => typeof x === "number");```
 ```we.define.type("array", (x)=> Array.isArray(x));```
 
-You can also _check_ a data element and get a boolean directly like this.  This has no side effects. If false, the handler will not be called.
+You can also _check_ a data element and get a boolean directly like this. This has no side effects. If false, the handler will not be called. Combining this with a common test function `expect` as from Jest, you can write something like this.
 ```
 let x = 12;
 we.define.type("natural", (x) => isNaturalNumber(x));

@@ -25,7 +25,8 @@
         "@typescript-eslint/no-var-requires" : "off",
         "@typescript-eslint/no-explicit-any" : "off",
         "@typescript-eslint/no-empty-function" : "off",
-        "brace-style": ["error", "1tbs", { "allowSingleLine": true }]
+        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "jest/no-done-callback" : "off"
     },
     "globals" : {
         "NODE_ENV" : "readonly",

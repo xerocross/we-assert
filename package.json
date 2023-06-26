@@ -1,10 +1,10 @@
 {
   "name": "we-assert",
-  "version": "5.1.1",
+  "version": "6.0.1",
   "description": "A very small package for use in internally verifying the flow and logic of scripts.",
   "main": "dist/we-assert.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose --silent",
     "pack": "webpack --mode production",
     "build": "npm run pack && npm run add-license",
     "lint": "npx eslint --fix src/",
