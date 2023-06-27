@@ -160,26 +160,3 @@ describe("the assert object", () => {
 
     });
 });
-describe("the define method", () => {
-    describe("returns an object with method 'type'", () => {
-        it("takes input of the form ([dataType]:string, test:(val)=>boolean)", () => {
-            const we = WeAssert.build();
-            expect(() => {
-                we.define.type("number", () => true);
-            }).not.toThrow();
-        });
-        describe("if a type 'number' is defined", () => {
-            const we = WeAssert.build();
-            we.define.type("number", x => typeof x == "number");
-            describe("method 'check.thatTypeOf([data]).is([type])'", () => {
-                it("evaluates true if input data passes test for type", () => {
-                    expect(we.check.thatTypeOf(5).is("number")).toBe(true);
-                });
-                it("evaluates false if input data fails test for type", () => {
-                    expect(we.check.thatTypeOf("string").is("number")).toBe(false);
-                });
-            });
-        });
-    });
-    
-});

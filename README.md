@@ -11,7 +11,7 @@ As of version 4, We-Assert has been stripped of Vulcan (https://github.com/RyanM
 
 ## New Stuff
 
-As of V6, the default handler function will now be passed the arguments `(message, assertionLevel, payload)`, which is a breaking change. That is why I have bumped the principal version number.
+As of V6, the default handler function will now be passed the arguments `(message, assertionLevel, payload)`, which is a breaking change. That is why I have bumped the principal version number. Also, all type checking has been offloaded into a separate project called `@xerocross/data-is`. That package is available publicly.
 
 As of V5, I have reordered the arguments of the basic `we.assert` functions
 so that they should be `(message, validatorFunction, payload)`. I realize this is
@@ -104,47 +104,16 @@ For any assertion, you can optionally send a payload along with the message. For
 `we.assert.atLevel("ERROR").that("x < y", x < y, myObj)`. Here `myObj` is any JavaScript object. You can handle the data in your handler method any way you want.
 
 
-### data validators
+### Data Validators
 
-You can define arbitrary data types so long as you can pass in a function that evaluates boolean to check whether any input passes or fails. The predicate defines the data type, such as `we.define.type([typeName], testFunction)`.
-
-Then to assert a data type, the usage pattern is `we.assert.atLevel([assertionLevel]).thatTypeOf(data).is([typeString])` to validate a given element `[data]`.
+In previous versions of We-Assert, data validation functionality was built into We-Assert. As of V6, that functionality has been offloaded into a separate package `@xerocross/data-is`. Here is a usage example.
 
 ```
-    we.define.type("natural", (x) => isNaturalNumber(x));
-    we.assert.atLevel("ERROR").thatTypeOf(x).is("natural");
+import WeAssert from "we-assert";
+import DataIs from "@xerocross/data-is";
+
+const we = WeAssert.build();
+const data = DataIs.build();
+data.define.type("integer", x => integerTestFunction(x));
+we.assert.atLevel("ERROR").that("x is an integer", data.element(x).is("integer"));
 ```
-The `we` instance does not come with any predefined types.
-
-You can also _check_ a data element and get a boolean directly like this. This has no side effects. If false, the handler will not be called. Combining this with a common test function `expect` as from Jest, you can write something like this:
-```
-let x = 12;
-we.define.type("natural", (x) => isNaturalNumber(x));
-expect(we.check.thatTypeOf(x).is("natural")).toBe(true);
-```
-
-Putting these things together, we can define something like this:
-
-```
-we.define.type("natural", (x) => isNaturalNumber(x));
-we.define.type("natural[]", function (x) {
-    if (!Array.isArray(x)) {
-        return false;
-    } else {
-        for (let i = 0; i < x.length; i++) {
-            if (!we.check.typeOf(x[i]).is("natural")) {
-                return false;
-            }
-        }
-        return true;
-    }
-});
-expect(we.check.thatTypeOf([2, 4, 7.5, 10]).is("natural[]")).toBe(false);
-```
-
-## To Do
-
-
-### Documentation
-
-There is more functionality in We-Assert that I have not documented here yet. I need to add more documentation to this readme document, and more unit tests for official documentation.

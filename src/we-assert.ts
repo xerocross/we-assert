@@ -9,16 +9,13 @@ type ValidationData = {
     message:string,
     statement:boolean | (() => boolean)
 }
-type verifyFunction = (x:any) => boolean;
+
 const validLevels = ["DEBUG", "WARN", "ERROR"];
 const levels: JavaScript = {
     0 : validLevels[0],
     1 : validLevels[1],
     2 : validLevels[2]
 };
-type DataTypes = {
-    [key: string] : (arg:any) => boolean
-}
 const levelStringToInt = function (levelString:string) :number {
     switch (levelString) {
     case "DEBUG":
@@ -32,13 +29,12 @@ const levelStringToInt = function (levelString:string) :number {
     }
 };
 
-const UndefinedTypeException = new Error("we-assert: undefined type");
 const InvalidAssertionLevel = new Error("we-assert: invalid assertion level");
 
 export default {
     build : function () {
         let currentLevel = 2;
-        const types:DataTypes = {};
+        // const types:DataTypes = {};
         const factBase: string[] = [];
         let errorHandler:LevelSpecificHandlerFunction;
         let warnHandler:LevelSpecificHandlerFunction;
@@ -74,26 +70,7 @@ export default {
             return true;
         };
 
-        const $typeOf = (data:any, dataType:string, levelString:string) => {
-            const level = levelStringToInt(levelString);
-            if (types[dataType]) {
-                return $that({
-                    statement : () => types[dataType](data),
-                    message : `${data} is of type ${dataType}`,
-                    level : levels[level],
-                    payload : {}
-                });
-            } else {
-                throw UndefinedTypeException;
-            }
-        };
-
         const we = {
-            define : {
-                type : function (typeName:string, vEval :verifyFunction ) :void {
-                    types[typeName] = vEval;
-                }
-            },
             logToConsole (val:boolean) {
                 isLogToConsole = val;
             },
@@ -123,30 +100,7 @@ export default {
             setDebugHandler : (newHandler:LevelSpecificHandlerFunction) => {
                 debugHandler = newHandler;
             },
-            
-            check : {
-                thatTypeOf : function (data:any) {
-                    return {
-                        is : function (dataTypeString:string) {
-                            if (types[dataTypeString]) {
-                                return types[dataTypeString](data);
-                            } else {
-                                throw UndefinedTypeException;
-                            }
-                        }
-                    };
-                }
-            },
             assert : {
-                that : function () {
-                    throw new Error("we-assert: assert.that is no longer supported");
-                },
-                forXBetween : function () {
-                    throw new Error("we-assert: assert.forXBetween is no longer supported");
-                },
-                typeOf () {
-                    throw new Error("we-assert: assert.typeOf is no longer supported");
-                },
                 atLevel : function (levelString:string) {
                     if (!validLevels.includes(levelString)) {
                         throw InvalidAssertionLevel;
@@ -159,13 +113,6 @@ export default {
                                 payload,
                                 level : levelString
                             });
-                        }
-                        thatTypeOf (data:any) {
-                            return {
-                                is (dataType : string) : boolean {
-                                    return $typeOf(data, dataType, levelString);
-                                }
-                            };
                         }
                         forXin (data: any[]) {
                             return {

@@ -108,7 +108,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/we-assert-combines-with-data-is.js"  ],
   "exclude": [
     "node_modules",
     "**/*.test.ts"

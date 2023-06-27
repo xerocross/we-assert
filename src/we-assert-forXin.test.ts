@@ -45,30 +45,6 @@ describe("we.assert.atLevel[assertionLevel].forXin(...).that", () => {
                         expect(handlerRan).toBe(false);
                     });
                 });
-                describe("combined with check.thatTypeOf", () => {
-                    it("fails if one element check fails", () => {
-                        const we = getWe();
-                        const testData = [1, "apple", 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(true);
-                    });
-                    it("passes if all element check pass", () => {
-                        const we = getWe();
-                        const testData = [1, 8, 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(false);
-                    });
-                });
             });
             describe("at assertion level WARN", () => {
                 const assertionLevel = "WARN";
@@ -107,30 +83,6 @@ describe("we.assert.atLevel[assertionLevel].forXin(...).that", () => {
                         expect(handlerRan).toBe(false);
                     });
                 });
-                describe("combined with check.thatTypeOf", () => {
-                    it("fails if one element check fails", () => {
-                        const we = getWe();
-                        const testData = [1, "apple", 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(true);
-                    });
-                    it("passes if all element check pass", () => {
-                        const we = getWe();
-                        const testData = [1, 8, 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(false);
-                    });
-                });
             });
             describe("at assertion level ERROR", () => {
                 const assertionLevel = "ERROR";
@@ -166,30 +118,6 @@ describe("we.assert.atLevel[assertionLevel].forXin(...).that", () => {
                             handlerRan = true;
                         });
                         we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", () => true);
-                        expect(handlerRan).toBe(false);
-                    });
-                });
-                describe("combined with check.thatTypeOf", () => {
-                    it("fails if one element check fails", () => {
-                        const we = getWe();
-                        const testData = [1, "apple", 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(true);
-                    });
-                    it("passes if all element check pass", () => {
-                        const we = getWe();
-                        const testData = [1, 8, 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
                         expect(handlerRan).toBe(false);
                     });
                 });
@@ -238,30 +166,6 @@ describe("we.assert.atLevel[assertionLevel].forXin(...).that", () => {
                         expect(handlerRan).toBe(false);
                     });
                 });
-                describe("combined with check.thatTypeOf", () => {
-                    it("passes if one element check fails", () => {
-                        const we = getWe();
-                        const testData = [1, "apple", 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(false);
-                    });
-                    it("passes if all element check pass", () => {
-                        const we = getWe();
-                        const testData = [1, 8, 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(false);
-                    });
-                });
             });
             describe("at assertion level WARN", () => {
                 const assertionLevel = "WARN";
@@ -300,30 +204,6 @@ describe("we.assert.atLevel[assertionLevel].forXin(...).that", () => {
                         expect(handlerRan).toBe(false);
                     });
                 });
-                describe("combined with check.thatTypeOf", () => {
-                    it("fails if one element check fails", () => {
-                        const we = getWe();
-                        const testData = [1, "apple", 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(true);
-                    });
-                    it("passes if all element check pass", () => {
-                        const we = getWe();
-                        const testData = [1, 8, 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(false);
-                    });
-                });
             });
             describe("at assertion level ERROR", () => {
                 const assertionLevel = "ERROR";
@@ -359,30 +239,6 @@ describe("we.assert.atLevel[assertionLevel].forXin(...).that", () => {
                             handlerRan = true;
                         });
                         we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", () => true);
-                        expect(handlerRan).toBe(false);
-                    });
-                });
-                describe("combined with check.thatTypeOf", () => {
-                    it("fails if one element check fails", () => {
-                        const we = getWe();
-                        const testData = [1, "apple", 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(true);
-                    });
-                    it("passes if all element check pass", () => {
-                        const we = getWe();
-                        const testData = [1, 8, 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
                         expect(handlerRan).toBe(false);
                     });
                 });
@@ -431,30 +287,6 @@ describe("we.assert.atLevel[assertionLevel].forXin(...).that", () => {
                         expect(handlerRan).toBe(false);
                     });
                 });
-                describe("combined with check.thatTypeOf", () => {
-                    it("passes if one element check fails", () => {
-                        const we = getWe();
-                        const testData = [1, "apple", 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(false);
-                    });
-                    it("passes if all element check pass", () => {
-                        const we = getWe();
-                        const testData = [1, 8, 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(false);
-                    });
-                });
             });
             describe("at assertion level WARN", () => {
                 const assertionLevel = "WARN";
@@ -493,30 +325,6 @@ describe("we.assert.atLevel[assertionLevel].forXin(...).that", () => {
                         expect(handlerRan).toBe(false);
                     });
                 });
-                describe("combined with check.thatTypeOf", () => {
-                    it("passes if one element check fails", () => {
-                        const we = getWe();
-                        const testData = [1, "apple", 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(false);
-                    });
-                    it("passes if all element check pass", () => {
-                        const we = getWe();
-                        const testData = [1, 8, 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(false);
-                    });
-                });
             });
             describe("at assertion level ERROR", () => {
                 const assertionLevel = "ERROR";
@@ -552,30 +360,6 @@ describe("we.assert.atLevel[assertionLevel].forXin(...).that", () => {
                             handlerRan = true;
                         });
                         we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", () => true);
-                        expect(handlerRan).toBe(false);
-                    });
-                });
-                describe("combined with check.thatTypeOf", () => {
-                    it("fails if one element check fails", () => {
-                        const we = getWe();
-                        const testData = [1, "apple", 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
-                        expect(handlerRan).toBe(true);
-                    });
-                    it("passes if all element check pass", () => {
-                        const we = getWe();
-                        const testData = [1, 8, 3];
-                        let handlerRan = false;
-                        we.setHandler(() => {
-                            handlerRan = true;
-                        });
-                        we.define.type("number", x => typeof x == "number");
-                        we.assert.atLevel(assertionLevel).forXin(testData).that("x is a number", x => we.check.thatTypeOf(x).is("number"));
                         expect(handlerRan).toBe(false);
                     });
                 });
