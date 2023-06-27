@@ -115,5 +115,5 @@ import DataIs from "@xerocross/data-is";
 const we = WeAssert.build();
 const data = DataIs.build();
 data.define.type("integer", x => integerTestFunction(x));
-we.assert.atLevel("ERROR").that("x is an integer", data.element(x).is("integer"));
+we.assert.atLevel("ERROR").that("x is an integer", data(x).is("integer"));
 ```
