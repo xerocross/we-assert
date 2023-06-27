@@ -48,7 +48,7 @@ We-Assert is written in TypeScript.  The package includes a test suite and a scr
 ## Usage
 
 Below we summarize some of the basic usage. The test suite should be considered the official documentation. Run `npm test` for an exhaustive specification of usage. Any usage not indicated
-in the tests may have unexpected results and they are not guaranteed even if documented here in teh README.
+in the tests may have unexpected results and they are not guaranteed even if documented here in the README.
 
 ```
 import WeAssert from "we-assert";
@@ -64,7 +64,7 @@ We recommend writing messages that are positive assertions&mdash;not an error me
 
 If the statement evaluates false, the handler will be called.  The handler should be a function of the form `handler : (message, assertionLevel, [,payload]) => {...}`.  To define such a function, we use `we.setHandler` as in this example.
 ```
-we.setHandler((message [,payload]) => {
+we.setHandler((message, level [,payload]) => {
     throw new Error(`The following assertion failed: ${message}`);
 });
 ```
@@ -147,4 +147,4 @@ expect(we.check.thatTypeOf([2, 4, 7.5, 10]).is("natural[]")).toBe(false);
 
 ### Documentation
 
-There is more functionality in We-Assert that I have not documented here yet. I need to add more documentation to this readme document.
+There is more functionality in We-Assert that I have not documented here yet. I need to add more documentation to this readme document, and more unit tests for official documentation.
