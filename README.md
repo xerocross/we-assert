@@ -3,11 +3,15 @@
 We-Assert is an assert utility for use in internally verifying statements inside scripts at runtime. One potential goal is to catch what would otherwise be silent errors, or perhaps even
 to mathematically prove that an algorithm has functioned as expected.
 
+The tests are the official documentation. Anything documented here in the README might be outdated by accident, but you can run the tests at any time and if the tests pass then they document current usage. Any PR that improves upon the clarity, verbiage, specificity, or exhaustiveness of the tests is welcome.
+
 This project was stale for a long while, but as of June 2023 I have updated it to Version 5, and it is up-to-code. I plan to use it in some of my other projects, so it is likely that I will maintain it better now.
 
 As of version 4, We-Assert has been stripped of Vulcan (https://github.com/RyanMarcus/vulcan), which was packaged with Version 3. The license of We-Assert 4 is the MIT license. What was formerly We-Assert Version 3 is now a new project called We-Assert-Proof, located at https://github.com/xerocross/we-assert-proof. That project is interesting to me, but I find the copyleft license of Vulcan far too restrictive.
 
 ## New Stuff
+
+As of V6, the default handler function will now be passed the arguments `(message, assertionLevel, payload)`, which is a breaking change. That is why I have bumped the principal version number.
 
 As of V5, I have reordered the arguments of the basic `we.assert` functions
 so that they should be `(message, validatorFunction, payload)`. I realize this is
@@ -16,13 +20,13 @@ the intention of the statement more readable because the plain language
 message (English, or whatever human language) is up front.
 
 As of V5, the `that` function can also include an optional payload object 
-for passing data of any kind from assertions into your handler function. The default handler function should be a function of the form `(message, assertionLevel, payload) => {...}`.
+for passing data of any kind from assertions into your handler function.
 
 When using the `we.assert.atLevel([level]).that` function, you can now pass
 in a function that evaluates boolean to benefit from lazy evaluation, as explained
 below.
 
-The function `we.assert.that` has been deprecated in favor of `we.assert.atLevel[assertionLevel].that(...);`. For now it is still supported, but in future versions it may be removed.
+The function `we.assert.that` is no longer supported as of V6. Use `we.assert.atLevel[assertionLevel].that(...);` instead.
 
 ## Importing
 
@@ -44,7 +48,7 @@ We-Assert is written in TypeScript.  The package includes a test suite and a scr
 ## Usage
 
 Below we summarize some of the basic usage. The test suite should be considered the official documentation. Run `npm test` for an exhaustive specification of usage. Any usage not indicated
-in the tests may have unexpected results.
+in the tests may have unexpected results and they are not guaranteed even if documented here in teh README.
 
 ```
 import WeAssert from "we-assert";
@@ -86,14 +90,6 @@ we.assert.atLevel("WARN").that("test", () => statement);
 then `statement` will not be evaluated and the handler will not be called and nothing will happen because `WARN` is not greater than or equal to the current level `ERROR`.
 
 
-You cannot pass a boolean-evaluating function into `we.assert.that` because logically it makes no sense. If you call
-```
-we.assert.that("test", false)
-```
-then levels play no role in the assertion.  It will be treated as an error and it will go to the handler.
-
-Note again that `we.assert.that` has been deprecated.
-
 ### handlers and payloads
 
 You can define specific handlers for each level using the methods below.
@@ -105,29 +101,26 @@ we.setDebugHandler((message, payload) => {...});
 ```
 
 For any assertion, you can optionally send a payload along with the message. For example:
-`we.assert.that("x < y", x < y, myObj)`. Here `myObj` is any JavaScript object. You can handle the data in your handler method any way you want.
+`we.assert.atLevel("ERROR").that("x < y", x < y, myObj)`. Here `myObj` is any JavaScript object. You can handle the data in your handler method any way you want.
 
 
 ### data validators
 
-You can define arbitrary data types so long as you can pass in a function that evaluates boolean to check whether any input passes or fails. The predicate defines the data type.
+You can define arbitrary data types so long as you can pass in a function that evaluates boolean to check whether any input passes or fails. The predicate defines the data type, such as `we.define.type([typeName], testFunction)`.
 
-The usage pattern is ``we.assert.typeOf(data).is(_tyepstring_, _message_)`` to validate a given element _data_.
+Then to assert a data type, the usage pattern is `we.assert.atLevel([assertionLevel]).thatTypeOf(data).is([typeString])` to validate a given element `[data]`.
 
 ```
     we.define.type("natural", (x) => isNaturalNumber(x));
-    we.assert.typeOf(x).is("natural", "x is a natural");
+    we.assert.atLevel("ERROR").thatTypeOf(x).is("natural");
 ```
-The ```we``` instance does not come with any predefined types.  If you want to use the standard JavaScript types you can define them in your ``we`` instance by, for example, executing this:
+The `we` instance does not come with any predefined types.
 
-```we.define.type("number", (x) => typeof x === "number");```
-```we.define.type("array", (x)=> Array.isArray(x));```
-
-You can also _check_ a data element and get a boolean directly like this. This has no side effects. If false, the handler will not be called. Combining this with a common test function `expect` as from Jest, you can write something like this.
+You can also _check_ a data element and get a boolean directly like this. This has no side effects. If false, the handler will not be called. Combining this with a common test function `expect` as from Jest, you can write something like this:
 ```
 let x = 12;
 we.define.type("natural", (x) => isNaturalNumber(x));
-expect(we.check.typeOf(x).is("natural")).toBe(true);
+expect(we.check.thatTypeOf(x).is("natural")).toBe(true);
 ```
 
 Putting these things together, we can define something like this:
@@ -146,7 +139,7 @@ we.define.type("natural[]", function (x) {
         return true;
     }
 });
-expect(we.check.typeOf([2, 4, 7.5, 10]).is("natural[]")).toBe(false);
+expect(we.check.thatTypeOf([2, 4, 7.5, 10]).is("natural[]")).toBe(false);
 ```
 
 ## To Do

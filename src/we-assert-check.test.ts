@@ -5,19 +5,19 @@ describe("the function we.check.typeOf", () => {
         const we = WeAssert.build();
         we.define.type("number", () => true);
         const x = 5;
-        expect(we.check.typeOf(x).is("number")).toBeTruthy();
+        expect(we.check.thatTypeOf(x).is("number")).toBeTruthy();
     });
     it("evaluates false if the type definition function evals false", () => {
         const we = WeAssert.build();
         we.define.type("number", () => false);
         const x = 5;
-        expect(we.check.typeOf(x).is("number")).toBeFalsy();
+        expect(we.check.thatTypeOf(x).is("number")).toBeFalsy();
     });
     it("throws if type string is not a defined type", () => {
         const we = WeAssert.build();
         const x = 5;
         expect(() => {
-            we.check.typeOf(x).is("number");
+            we.check.thatTypeOf(x).is("number");
         }).toThrow();
     });
 });
