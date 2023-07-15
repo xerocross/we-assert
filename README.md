@@ -3,7 +3,7 @@
 We-Assert is an assert utility for use in internally verifying statements inside scripts at runtime. One potential goal is to catch what would otherwise be silent errors, or perhaps even
 to mathematically prove that an algorithm has functioned as expected.
 
-The tests are the official documentation. Anything documented here in the README might be outdated by accident, but you can run the tests at any time and if the tests pass then they document current usage. Any PR that improves upon the clarity, verbiage, specificity, or exhaustiveness of the tests is welcome.
+The tests of this app are the official documentation. Anything documented here in the README might be outdated by accident, but you can run the tests at any time and if the tests pass then they document current usage. Any PR that improves upon the clarity, verbiage, specificity, or exhaustiveness of the tests is welcome.
 
 This project was stale for a long while, but as of June 2023 I have updated it to Version 5, and it is up-to-code. I plan to use it in some of my other projects, so it is likely that I will maintain it better now.
 
@@ -13,20 +13,11 @@ As of version 4, We-Assert has been stripped of Vulcan (https://github.com/RyanM
 
 As of V6, the default handler function will now be passed the arguments `(message, assertionLevel, payload)`, which is a breaking change. That is why I have bumped the principal version number. Also, all type checking has been offloaded into a separate project called `@xerocross/data-is`. That package is available publicly.
 
-As of V5, I have reordered the arguments of the basic `we.assert` functions
-so that they should be `(message, validatorFunction, payload)`. I realize this is
-a breaking change, but I'm doing it because it makes more sense, and it makes
-the intention of the statement more readable because the plain language 
-message (English, or whatever human language) is up front.
-
-As of V5, the `that` function can also include an optional payload object 
-for passing data of any kind from assertions into your handler function.
+The function `we.assert.that` is no longer supported as of V6. Use `we.assert.atLevel[assertionLevel].that(...);` instead.
 
 When using the `we.assert.atLevel([level]).that` function, you can now pass
 in a function that evaluates boolean to benefit from lazy evaluation, as explained
-below.
-
-The function `we.assert.that` is no longer supported as of V6. Use `we.assert.atLevel[assertionLevel].that(...);` instead.
+below. You can also pass in any object as a payload: `we.assert.atLevel("WARN").that("this is true", () => {testThisIsTrue()}, payloadObject`)`.
 
 ## Importing
 
